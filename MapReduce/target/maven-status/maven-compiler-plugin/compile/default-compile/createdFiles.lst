@@ -1,0 +1,13 @@
+com\fantasy\mapreduce\Writable\writeableDriver.class
+com\fantasy\mapreduce\Writable\writeableMapper.class
+com\fantasy\mapreduce\writableComparable\ComparableDriver.class
+com\fantasy\mapreduce\wordcount\wordCountReducer.class
+com\fantasy\mapreduce\Writable\writeableReducer.class
+com\fantasy\mapreduce\writableComparable\ComparableMapper.class
+com\fantasy\mapreduce\wordcount\wordCountDriver.class
+com\fantasy\mapreduce\writableComparable\ComparableReducer.class
+com\fantasy\mapreduce\Partition\ProvincePartitioner.class
+com\fantasy\mapreduce\Writable\FlowBean.class
+com\fantasy\mapreduce\writableComparable\FlowBean.class
+com\fantasy\mapreduce\Partition\ProvinceDriver.class
+com\fantasy\mapreduce\wordcount\wordCountMapper.class
