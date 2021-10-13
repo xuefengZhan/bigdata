@@ -9,9 +9,11 @@
         <module name="HDFSClient" />
         <module name="SparkCore" />
         <module name="Flume" />
-        <module name="Spark" />
         <module name="MapReduce" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Spark" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
