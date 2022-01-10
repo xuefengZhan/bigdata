@@ -8,7 +8,9 @@
         <outputRelativeToContentRoot value="true" />
         <module name="HDFSClient" />
         <module name="SparkCore" />
+        <module name="flink" />
         <module name="Flume" />
+        <module name="Hive" />
         <module name="MapReduce" />
       </profile>
     </annotationProcessing>

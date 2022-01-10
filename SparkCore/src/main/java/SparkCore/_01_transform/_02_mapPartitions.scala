@@ -4,9 +4,9 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object _02_mapPartitions {
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setAppName("mapPartitions").setMaster("local[2]")
+    val conf = new SparkConf().setAppName("mapPartitions").setMaster("local[*]")
     val sc = new SparkContext(conf)
-    val src = sc.makeRDD(List(1, 2, 3, 4),2)
+    val src = sc.makeRDD(List(1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16),2)
 
     val value = src.mapPartitions(
       iter => {
