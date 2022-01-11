@@ -1,4 +1,4 @@
-package StructedStreaming._03_流式DF和DS的操作._03_waterMark
+package StructedStreaming._03_流式DF和DS的操作._02_eventTime
 
 import org.apache.spark.sql.execution.streaming.FileStreamSource.Timestamp
 import org.apache.spark.sql.streaming.StreamingQuery
@@ -27,7 +27,7 @@ object _01_WordCountWindow {
 
     import org.apache.spark.sql.functions._
     //统计每个窗口的每个word的个数
-    //window是一个新的列
+    //window是一个函数，返回值是要给新的列
     val wordCounts: Dataset[Row] = words.groupBy(
       //调用 window 函数, 返回的是一个 Column
       //参数 1: df 中表示时间戳的列 参数 2: 窗口长度 参数 3: 滑动步长

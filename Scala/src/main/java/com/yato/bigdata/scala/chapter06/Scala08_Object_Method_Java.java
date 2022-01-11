@@ -11,6 +11,7 @@ public class Scala08_Object_Method_Java {
 
         AAA08 c = new BBB08();
         System.out.println(c.sum());//40
+        System.out.println(c.i);    //10
 
         //注释掉BBB08中的sum()方法，执行下面的代码
         AAA08 d = new BBB08();
@@ -42,9 +43,9 @@ class AAA08 {
 class BBB08 extends AAA08 {
     public int i = 20;
 
-    //    public int sum(){
-//        return i + 20;
-//    }
+    public int sum(){
+        return i + 20;
+    }
     public int getI() {
         return i;
     }

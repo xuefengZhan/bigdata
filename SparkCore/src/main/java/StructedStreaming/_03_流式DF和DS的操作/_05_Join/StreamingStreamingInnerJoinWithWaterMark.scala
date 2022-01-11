@@ -49,7 +49,7 @@ object StreamingStreamingInnerJoinWithWaterMark {
     //todo 1. inner join 操作
 //    val joinResult: DataFrame = nameSexStream.join(nameAgeStream,expr(
 //      """
-//        | name1 = name 2 and
+//        | name1 = name2 and
 //        | ts2 >= ts1 and
 //        | ts2 <= ts1 + interval 1 minutes
 //        |""".stripMargin))
