@@ -3,9 +3,7 @@ package StructedStreaming._03_流式DF和DS的操作._01_基操
 import org.apache.spark.sql.types.{LongType, StringType, StructType}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-/**
- * 弱类型
- */
+
 object BasicOperation3 {
   def main(args: Array[String]): Unit = {
     val spark: SparkSession = SparkSession

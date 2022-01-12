@@ -27,12 +27,14 @@ object BasicOperation2 {
       .schema(peopleSchema)
       .json("data")
 
-    // todo 强类型 给DF增加类型
+    // todo 强类型 给DF增加类型  所以需要样例类
     // 转换DS要 导包
     import spark.implicits._
     val peopleDS: Dataset[People] = peopleDF.as[People] // 转成 ds
 
     //val df: DataFrame = peopleDF.select("name","age", "sex").where("age > 20")
+    //强类型，字段就当作属性来使用
+    //强类型：Select用map where用filter
     val df: Dataset[String] = peopleDS.filter(_.age > 20).map(_.name)
 
     df.writeStream

@@ -14,6 +14,8 @@
         <module>Flume</module>
         <module>Spark</module>
         <module>SparkCore</module>
+        <module>Hive</module>
+        <module>flink</module>
     </modules>
 
     <properties>

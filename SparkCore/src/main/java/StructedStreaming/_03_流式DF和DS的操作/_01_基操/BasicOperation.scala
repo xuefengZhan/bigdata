@@ -22,7 +22,7 @@ object BasicOperation {
 
     val peopleDF: DataFrame = spark.readStream
       .schema(peopleSchema)
-      .json("data")
+      .json("data/json")
     // 弱类型 api
     val df: DataFrame = peopleDF.select("name", "age", "sex").where("age > 20")
 
