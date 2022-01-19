@@ -3,7 +3,10 @@ package No03_transform;
 import Bean.SensorReading;
 import org.apache.flink.api.common.functions.MapFunction;
 
+
+//todo  MapFunction<T, O>    必须要有返回值
 public class MyMapFunction implements MapFunction<String, SensorReading> {
+
 
 
     @Override

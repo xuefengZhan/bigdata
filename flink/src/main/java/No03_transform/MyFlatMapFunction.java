@@ -3,6 +3,10 @@ package No03_transform;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
+//todo
+//  FlatMapFunction<T, O>
+//  flatMap方法是void 返回值可以为0个也可以为多个
+//  输出由collector控制
 public class MyFlatMapFunction implements FlatMapFunction<String,String> {
 
     @Override
