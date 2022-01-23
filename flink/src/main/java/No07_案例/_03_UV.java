@@ -20,7 +20,7 @@ import org.apache.flink.util.Collector;
 public class _03_UV {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        DataStreamSource<String> source = env.readTextFile("E:\\work\\bigdata\\flink\\src\\main\\resources\\Data\\UserBehavior.csv");
+        DataStreamSource<String> source = env.readTextFile("D:\\IdeaProjects\\bigdata\\flink\\src\\main\\resources\\Data\\UserBehavior.csv");
 
         SingleOutputStreamOperator<UserBehavior> userBehaviorDS = source.map(new MapFunction<String, UserBehavior>() {
             @Override
@@ -44,6 +44,8 @@ public class _03_UV {
             }
         });
 
+
+        //todo 按照userid keyBy
         KeyedStream<UserBehavior, Long> keyedStream = filter.keyBy(new KeySelector<UserBehavior, Long>() {
             @Override
             public Long getKey(UserBehavior value) throws Exception {
@@ -52,6 +54,8 @@ public class _03_UV {
         });
 
 
+
+        // todo
         SingleOutputStreamOperator<Integer> res = keyedStream .flatMap(new RichFlatMapFunction<UserBehavior, Integer>() {
 
             MapState<Long, Integer> set;

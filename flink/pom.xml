@@ -33,6 +33,21 @@
         </dependency>
 
 
+
+        <!-- table执行环境-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-planner_2.12</artifactId>
+            <version>1.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-api-java-bridge_2.12</artifactId>
+            <version>1.10.1</version>
+        </dependency>
+
+
+
         <!--
          Kafka-0.11:指的是kafka0.11版本及以上
          2.12是scala版本
