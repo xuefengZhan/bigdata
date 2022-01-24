@@ -39,7 +39,7 @@ public class _06_PV_双重聚合 {
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         //env.setParallelism(1);
 
-        DataStreamSource<String> source = env.readTextFile("D:\\IdeaProjects\\bigdata\\flink\\src\\main\\resources\\Data\\UserBehavior.csv");
+        DataStreamSource<String> source = env.readTextFile("mn 'day");
 
 
         SingleOutputStreamOperator<UserBehavior> userBehaviorDS = source.map(new MapFunction<String, UserBehavior>() {
