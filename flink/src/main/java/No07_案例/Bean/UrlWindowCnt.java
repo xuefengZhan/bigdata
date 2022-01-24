@@ -3,7 +3,10 @@ package No07_案例.Bean;
 public class UrlWindowCnt {
     private String  Url;
     private String timeStamp;
-    private int count;
+    private Integer count;
+
+    public UrlWindowCnt() {
+    }
 
     public UrlWindowCnt(String url, String timeStamp, int count) {
         Url = url;
