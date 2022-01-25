@@ -3,15 +3,19 @@ package No07_案例;
 import No07_案例.Bean.UserBehavior;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
 
-public class _01_PV {
+public class _02_wordCount_PV_ValueState {
 
     //用户ID、商品ID、商品类目ID、行为类型和时间戳
     public static void main(String[] args) throws Exception {
@@ -32,27 +36,50 @@ public class _01_PV {
             }
         });
 
-//        userBehaviorDS.print();
+
 
         // 3.2 过滤 并且 转换成（pv，1）
-        SingleOutputStreamOperator<Tuple2<String, Integer>>  pvAndOneDS = userBehaviorDS.flatMap(new FlatMapFunction<UserBehavior, Tuple2<String, Integer>>() {
+        SingleOutputStreamOperator<UserBehavior>  pvAndOneDS = userBehaviorDS.flatMap(new FlatMapFunction<UserBehavior,UserBehavior>() {
             @Override
-            public void flatMap(UserBehavior value, Collector<Tuple2<String, Integer>> out) throws Exception {
+            public void flatMap(UserBehavior value, Collector<UserBehavior> out) throws Exception {
                 if ("pv".equals(value.getBehavior())) {
-                    out.collect(new Tuple2<>("pv", 1));
+                    out.collect(value);
                 }
             }
         });
 
 
 
-        // 3.3 按照维度分组：pv行为
-        KeyedStream<Tuple2<String, Integer>, Tuple> keyedStream = pvAndOneDS.keyBy(0);
+        // 3.3 只有pv的数据了，keyBy走个过场即可
+        KeyedStream<UserBehavior,String>  keyedStream = pvAndOneDS.keyBy(x->"pv");
 
         // 3.4 求和：
+        SingleOutputStreamOperator<Integer> res = keyedStream.process(new KeyedProcessFunction<String, UserBehavior, Integer>() {
 
-        SingleOutputStreamOperator<Tuple2<String, Integer>> pvDS = keyedStream.sum(1);
-        pvDS.print();
+            ValueState<Integer> cnt;
+
+            @Override
+            public void open(Configuration parameters) throws Exception {
+                cnt = getRuntimeContext().getState(
+                        new ValueStateDescriptor<Integer>(
+                                "cnt-state",
+                                Integer.class,
+                                0
+                        )
+                );
+            }
+
+
+            @Override
+            public void processElement(UserBehavior value, Context ctx, Collector<Integer> out) throws Exception {
+                cnt.update(cnt.value() + 1);
+                out.collect(cnt.value());
+            }
+        });
+
+
+        res.print();
+
 
         env.execute();
 
