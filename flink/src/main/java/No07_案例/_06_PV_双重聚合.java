@@ -24,7 +24,7 @@ import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
-import scala.util.parsing.input.Page;
+
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

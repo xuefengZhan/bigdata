@@ -3,6 +3,7 @@ package No11_FlinkSQL;
 
 import Bean.WaterSensor;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -12,10 +13,11 @@ import org.apache.flink.types.Row;
 
 import static org.apache.flink.table.api.Expressions.$;
 
-public class FlinkSQL01_StreamToTable_Test {
+public class FlinkSQL02_StreamToTable_Agg {
     public static void main(String[] args) throws Exception {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(1);
         DataStream<String> inputDataStream = env.socketTextStream("hadoop102", 9999);
         SingleOutputStreamOperator<WaterSensor> waterSensorDS = inputDataStream.map(new MapFunction<String, WaterSensor>() {
 
@@ -36,22 +38,34 @@ public class FlinkSQL01_StreamToTable_Test {
         Table sebsorTable = tableEnv.fromDataStream( waterSensorDS);
 
         //todo TableAPI 在流上进行查询
-        Table res = sebsorTable.where($("id").isEqual("ws_001"))
-                .select($("id"),$("ts"), $("vc"));
 
-        Table res2 = sebsorTable.where("id = 'ws_001'")
-                .select("id,ts,vc"); //老版本写法
+        Table selectTable = sebsorTable.where($("vc").isGreaterOrEqual(20))
+                .groupBy($("id"))
+                .aggregate($("vc").sum().as("sum_vc"))
+                .select($("id"), $("sum_vc"));
 
 
-        //todo 将结果表转换成流打印  转换成一个类型进行打印 ROW是通用的
-        DataStream<Row> rowDataStream = tableEnv.toAppendStream(res, Row.class);
+        //老版本写法，将函数用.
+        Table t2 = sebsorTable.groupBy("id")
+                .select("id,vc.sum");
 
-        rowDataStream.print();
+        //todo 聚合操作不能用追加流
+        DataStream<Tuple2<Boolean, Row>> tuple2DataStream = tableEnv.toRetractStream(selectTable, Row.class);
+
+        tuple2DataStream.print();
 
         env.execute();
 
 
     }
     //ws_001,1577844001,45
-    //ws_002,1577844015,43
+    //(true,ws_001,45)
+
+    //ws_001,1577844001,45
+    //(false,ws_001,45)
+    //(true,ws_001,90)
+
+    //ws_001,1577844001,45
+    //(false,ws_001,90)
+    //(true,ws_001,135)
 }
