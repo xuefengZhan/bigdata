@@ -74,6 +74,19 @@
             <version>${filnk.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka_${scala.binary.version}</artifactId>
+            <version>${filnk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-jdbc_${scala.binary.version}</artifactId>
+            <version>${filnk.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
@@ -98,6 +111,8 @@
             <artifactId>jedis</artifactId>
             <version>3.3.0</version>
         </dependency>
+
+
 
         <!--
          Kafka-0.11:指的是kafka0.11版本及以上

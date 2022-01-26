@@ -1,4 +1,4 @@
-package No11_FlinkSQL;
+package No11_FlinkSQL.TableAPI;
 
 
 import Bean.WaterSensor;
