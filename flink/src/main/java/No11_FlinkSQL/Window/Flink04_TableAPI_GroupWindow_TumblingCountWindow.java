@@ -20,8 +20,8 @@ public class Flink04_TableAPI_GroupWindow_TumblingCountWindow {
         env.setParallelism(1);
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
 
-       // DataStreamSource<String> sourceDS = env.readTextFile("D:\\IdeaProjects\\bigdata\\flink\\src\\main\\resources\\sensort.txt");
-        DataStreamSource<String> sourceDS = env.socketTextStream("hadoop102", 9999);
+       DataStreamSource<String> sourceDS = env.readTextFile("E:\\work\\bigdata\\flink\\src\\main\\resources\\sensort.txt");
+      //DataStreamSource<String> sourceDS = env.socketTextStream("hadoop102", 9999);
 
         SingleOutputStreamOperator<WaterSensor> sensorDS = sourceDS.map(new MapFunction<String, WaterSensor>() {
             @Override
@@ -38,10 +38,9 @@ public class Flink04_TableAPI_GroupWindow_TumblingCountWindow {
                 $("pt").proctime());
 
         //滚动计数窗口
-        Table res = table.window(Tumble.over(rowInterval(5L))
-                        .on($("pt")).as("cw"))
-                .groupBy($("id"), $("cw"))
-                .select($("id"), $("id").count());
+        Table res = table.window(Tumble.over(rowInterval(5L)).on($("pt")).as("cw"))
+                         .groupBy($("id"), $("cw"))
+                         .select($("id"), $("id").count());
 
 
         res.printSchema();

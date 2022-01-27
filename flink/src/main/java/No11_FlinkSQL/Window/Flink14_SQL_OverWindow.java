@@ -2,26 +2,23 @@ package No11_FlinkSQL.Window;
 
 import Bean.WaterSensor;
 import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.Table;
-import org.apache.flink.table.api.Tumble;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
-import org.apache.flink.types.Row;
 
 import static org.apache.flink.table.api.Expressions.$;
-import static org.apache.flink.table.api.Expressions.lit;
 
-public class Flink01_TableAPI_GroupWindow_TumblingWindow {
+public class Flink14_SQL_OverWindow {
+
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
+        env.setParallelism(1);
 
         DataStreamSource<String> sourceDS = env.readTextFile("E:\\work\\bigdata\\flink\\src\\main\\resources\\sensort.txt");
+
         SingleOutputStreamOperator<WaterSensor> sensorDS = sourceDS.map(new MapFunction<String, WaterSensor>() {
             @Override
             public WaterSensor map(String s) throws Exception {
@@ -36,19 +33,30 @@ public class Flink01_TableAPI_GroupWindow_TumblingWindow {
                 $("vc"),
                 $("pt").proctime());
 
-        //滚动窗口： over.on.as
-        Table res = table.window(Tumble.over(lit(5).seconds()).on($("pt")).as("tw"))
-                .groupBy($("id"), $("tw"))
-                .select($("id"), $("id").count(),$("tw").proctime());
+
+        Table result = tableEnv.sqlQuery("select " +
+                "id, " +
+                "sum(vc) over(partition by id order by pt) sum_vc, " +
+                "count(id) over(partition by id order by pt) count_id " +
+                "from " + table);
+
+       // result.execute().print();
 
 
-        //结果表转为流输出
-        //todo 说明：窗口聚合由于只输出一次，因此可以用追加流
-        DataStream<Row> tuple = tableEnv.toAppendStream(res, Row.class);
+        Table result2 = tableEnv.sqlQuery("select " +
+                "id, " +
+                "sum(vc) over w as sum_vc, " +
+                "count(id) over w as count_id " +
+                "from " + table +
+                " window w as (partition by id order by pt) ");
+        //window w as  不要加 over
 
-        tuple.print();
+
+        //flinkSQL 中一个SQL over()窗口必须一致
+        //HiveSQL 中可以不一样
+
+        result2.execute().print();
 
         env.execute();
-
     }
 }

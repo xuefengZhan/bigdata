@@ -36,8 +36,9 @@ public class Flink02_TableAPI_GroupWindow_SlidingWindow {
                 $("vc"),
                 $("pt").proctime());
 
-        Table res = table.window(Slide.over(lit(5).seconds()).every(lit(2).seconds())
-                        .on($("pt")).as("sw"))
+
+        //滚动窗口： over.every.on.as
+        Table res = table.window(Slide.over(lit(5).seconds()).every(lit(2).seconds()).on($("pt")).as("sw"))
                 .groupBy($("id"), $("sw"))
                 .select($("id"), $("id").count());
 

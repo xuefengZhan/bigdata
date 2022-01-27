@@ -36,8 +36,8 @@ public class Flink03_TableAPI_GroupWindow_SessionWindow {
                 $("vc"),
                 $("pt").proctime());
 
-        Table res = table.window(Session.withGap(lit(5).seconds())
-                        .on($("pt")).as("sw"))
+        //Session窗口： withGap.on.as
+        Table res = table.window(Session.withGap(lit(5).seconds()).on($("pt")).as("sw"))
                 .groupBy($("id"), $("sw"))
                 .select($("id"), $("id").count());
 
