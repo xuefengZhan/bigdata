@@ -19,7 +19,7 @@
         <slf4j.version>1.7.30</slf4j.version>
     </properties>
 
-    <dependencies>
+       <dependencies>
         <!-- flink java版本，1.10.1版本 -->
         <dependency>
             <groupId>org.apache.flink</groupId>

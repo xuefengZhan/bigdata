@@ -11,6 +11,8 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/Spark/pom.xml" />
+        <option value="$PROJECT_DIR$/UserBehaviorAnalysis/HotItemsAnalysis/pom.xml" />
+        <option value="$PROJECT_DIR$/UserBehaviorAnalysis/pom.xml" />
       </set>
     </option>
   </component>

@@ -38,7 +38,11 @@ public class Flink10_TableAPI_OverWindow_Unbounded {
 
 
         //preceding(UNBOUNDED_ROW)
-        Table result = table.window(Over.partitionBy("id").orderBy($("pt")).as("ow"))
+        Table result = table.window(
+                        Over
+                        .partitionBy("id")
+                        .orderBy($("pt")).as("ow")
+                       )
                 .select($("id"),
                         $("vc").sum().over($("ow")),
                         $("id").count().over($("ow")));
