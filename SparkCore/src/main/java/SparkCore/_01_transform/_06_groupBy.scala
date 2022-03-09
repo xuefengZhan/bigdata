@@ -11,6 +11,9 @@ object _06_groupBy {
     val dataRDD1 = src.groupBy(_.charAt(0))
 
     dataRDD1.collect().foreach(x=>println(x))
+    //(h,CompactBuffer(hadoop, hive))
+    //(f,CompactBuffer(flink))
+    //(s,CompactBuffer(spark))
 
   }
 }

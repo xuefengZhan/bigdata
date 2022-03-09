@@ -30,11 +30,11 @@ object _20_aggregateByKey3 {
         (total, totalnum)
       }
     )
-    val result: RDD[(String, Int)] = value.mapValues(tuple => tuple match {
+    val result: RDD[(String, Int)] = value.mapValues {
       case (num, cnt) => {
         num / cnt
       }
-    })
+    }
 
     result.collect().foreach(x=>println(x))
   }
