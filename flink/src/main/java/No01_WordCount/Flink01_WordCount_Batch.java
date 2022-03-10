@@ -18,11 +18,12 @@ public class Flink01_WordCount_Batch {
 
     public static void main(String[] args) throws Exception {
         //todo 1.创建flink应用环境
+        //ExecutionEnvironment 是批环境
         ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
 
         //todo 2.创建Source
-        String inputPath = "D:\\IdeaProjects\\bigdata\\flink\\src\\main\\resources\\hello.txt";
+        String inputPath = "E:\\work\\bigdata\\flink\\src\\main\\resources\\hello.txt";
         DataSource<String> source = env.readTextFile(inputPath);
 
         //todo 3.

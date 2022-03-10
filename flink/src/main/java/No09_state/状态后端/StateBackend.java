@@ -1,4 +1,6 @@
+
 package No09_state.状态后端;
+
 
 import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.runtime.state.memory.MemoryStateBackend;
@@ -9,7 +11,11 @@ public class  StateBackend {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         //todo 设置状态后端
-        env.setStateBackend(new MemoryStateBackend());
+        // 默认情况下，状态保存在TaskManagers的内存中
+        env.setStateBackend(new MemoryStateBackend(5242880,false));
+
+
+
         env.setStateBackend(new FsStateBackend("hdfs:hadoop102:8020/flink/ck"));
         //RocksDBBackend 需要导入额外的依赖
         //env.setStateBackend(new RicksDBStateBackend("hdfs:hadoop102:8020/flink/ck"));

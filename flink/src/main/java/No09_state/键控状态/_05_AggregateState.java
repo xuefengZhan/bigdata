@@ -1,3 +1,4 @@
+
 package No09_state.键控状态;
 
 import Bean.SensorReading;
@@ -37,7 +38,7 @@ public class _05_AggregateState {
          //todo 计算平均水位
         keyedStream.process(new KeyedProcessFunction<Tuple,SensorReading, Tuple2<String,Double>>() {
 
-            //输入和输出可以不一样
+            //todo 泛型是in和out，表示输入和输出可以不一样
             AggregatingState<SensorReading,Double> aggregatingState;
 
             @Override

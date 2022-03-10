@@ -9,7 +9,7 @@ object _09_distinct {
 
     val dataRDD = sc.makeRDD(List(
       1,2,3,4,1,2
-    ),1)
+    ),2)
     val dataRDD1 = dataRDD.distinct()
     dataRDD1.collect().foreach(x=>println(x))
     //4

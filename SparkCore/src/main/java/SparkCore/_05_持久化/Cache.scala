@@ -23,7 +23,7 @@ object Cache {
       (word, 1)
     })
 
-    mapRDD.cache()
+    //mapRDD.cache()
 
     val reduceRDD: RDD[(String, Int)] = mapRDD.reduceByKey(_ + _)
 
