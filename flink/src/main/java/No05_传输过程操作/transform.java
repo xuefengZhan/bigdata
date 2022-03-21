@@ -1,5 +1,6 @@
 package No05_传输过程操作;
 
+import org.apache.flink.api.common.functions.Partitioner;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
@@ -26,6 +27,20 @@ public class transform {
         //keyBy:2> hello
         //keyBy:2> hello
 
+
+        //自定义分区器  泛型是key 返回值是分区号
+        source.partitionCustom(new Partitioner<String>() {
+            @Override
+            public int partition(String s, int i) {
+                if (s.length() == 1) return 0;
+                return 1;
+            }
+        }, new KeySelector<String, String>() {
+            @Override
+            public String getKey(String s) throws Exception {
+                return s;
+            }
+        });
 
         source.shuffle().print("shuffle");//随机
 

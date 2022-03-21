@@ -1,7 +1,7 @@
 package No04_RichFunction;
 
 import Bean.SensorReading;
-import No03_transform.MyMapFunction;
+import No03_transform.myFunction.MyMapFunction;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
