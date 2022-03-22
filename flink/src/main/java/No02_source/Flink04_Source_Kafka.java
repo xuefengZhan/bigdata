@@ -2,9 +2,11 @@ package No02_source;
 
 import Bean.SensorReading;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.formats.json.JsonRowDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.junit.Test;
 
@@ -13,62 +15,30 @@ import java.util.Properties;
 
 public class Flink04_Source_Kafka {
 
-    @Test
-    /**
-     * 从内存的集合中读取数据
-     */
-    public void test01() throws Exception {
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(2);
 
-        DataStreamSource<SensorReading> source = env.fromCollection(
-                Arrays.asList(new SensorReading("sensor_1", 1547718199L, 35.8),
-                        new SensorReading("sensor_6", 1547718201L, 15.4),
-                        new SensorReading("sensor_7", 1547718202L, 6.7),
-                        new SensorReading("sensor_10", 1547718205L, 38.1))
-        );
 
-        source.print();
-        env.execute();
-    }
-
-    @Test
-    /**
-     * 从文件中读取数据
-     */
-    public void test02() throws Exception {
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(2);
-
-        DataStreamSource<String> source = env.readTextFile("E:\\work\\bigdata\\flink\\src\\main\\resources\\sensort.txt");
-        source.print();
-        env.execute();
-    }
-
-    @Test
     /**
      * 从kafka中读取数据
      */
-    public void test03() throws Exception {
-
+    public static void main(String[] args) throws Exception {
         // 0.创建执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
         // 1.从kafka中读取
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "hadoop102:9092");
-        properties.setProperty("group.id", "consumer-group");
-        properties.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        properties.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        properties.setProperty("auto.offset.reset", "latest");
+        properties.setProperty("bootstrap.servers", "172.16.4.86:9092");
+        properties.setProperty("group.id", "flink_release");
 
-        DataStreamSource<String> kafkaDS = env.addSource(
-                new FlinkKafkaConsumer011<String>(
-                        "sensor",
-                        new SimpleStringSchema(),
-                        properties)
-        );
+        FlinkKafkaConsumer010<String> kafkaConsumer = new FlinkKafkaConsumer010<String>("yjp_trace_v4_stream", new SimpleStringSchema(), properties);
+        // 指定起始位置
+        //kafkaConsumer.setStartFromEarliest();
+        kafkaConsumer.setStartFromLatest();
+
+        //kafkaConsumer.setStartFromGroupOffsets();
+        //kafkaConsumer.setStartFromTimestamp(); // kafka 0.10版本后 Segment文件中除了 index 和 log 还有timestampIndex文件
+
+        DataStreamSource<String> kafkaDS = env.addSource(kafkaConsumer);
 
         kafkaDS.print("kafka source");
 

@@ -19,7 +19,7 @@ import org.apache.flink.util.Collector;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-public class Window01_TimeTumbling_Apply {
+public class Window01_时间滚动窗口03_Apply聚合 {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);

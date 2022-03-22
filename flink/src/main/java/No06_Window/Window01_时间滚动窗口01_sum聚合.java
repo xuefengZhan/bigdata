@@ -1,6 +1,5 @@
 package No06_Window;
 
-import org.apache.commons.compress.utils.Lists;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -9,17 +8,12 @@ import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
-import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
-public class Window01_TimeTumbling_Process {
+public class Window01_时间滚动窗口01_sum聚合 {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -42,21 +36,13 @@ public class Window01_TimeTumbling_Process {
         //todo 开窗
         WindowedStream<Tuple2<String, Integer>, Tuple, TimeWindow> window = keyedStream.window(TumblingProcessingTimeWindows.of(Time.seconds(5)));
 
-        //todo 全量窗口计算
-        SingleOutputStreamOperator<Tuple2<String, Integer>> res = window.process(new ProcessWindowFunction<Tuple2<String, Integer>, Tuple2<String, Integer>, Tuple, TimeWindow>() {
-            @Override
-            public void process(Tuple tuple, Context context, Iterable<Tuple2<String, Integer>> elements, Collector<Tuple2<String, Integer>> out) throws Exception {
-                ArrayList<Tuple2<String, Integer>> arrays = Lists.newArrayList(elements.iterator());
-
-                int cnt = arrays.size();
+        //todo 聚合计算
+        SingleOutputStreamOperator<Tuple2<String, Integer>> res = window.sum(1);
 
 
-                long start = context.window().getStart();
-                out.collect(new Tuple2<>(new Timestamp(start) + (String) tuple.getField(0), cnt));
-            }
-        });
-
-        //全量窗口函数 可以获取窗口信息
+        //todo 输出特点
+        //1.没有数据过来就不输出
+        //2.每一次只输出该窗口内的计算结果
 
         res.print();
 

@@ -17,7 +17,7 @@ import org.apache.flink.util.Collector;
 
 import java.sql.Timestamp;
 
-public class Window01_TimeTumbling_Aggregate {
+public class Window01_时间滚动窗口02_Aggregate聚合 {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
