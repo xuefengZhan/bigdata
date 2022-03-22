@@ -30,20 +30,22 @@ public class Flink01_TableAPI_GroupWindow_TumblingWindow {
             }
         });
 
+
+        //todo 1. 引入时间语义
         Table table = tableEnv.fromDataStream(sensorDS,
                 $("id"),
                 $("ts"),
                 $("vc"),
                 $("pt").proctime());
 
-        //滚动窗口： over.on.as
+        //todo 2.定义 滚动窗口： over.on.as
         Table res = table.window(Tumble.over(lit(5).seconds()).on($("pt")).as("tw"))
                 .groupBy($("id"), $("tw"))
                 .select($("id"), $("id").count(),$("tw").proctime());
 
 
         //结果表转为流输出
-        //todo 说明：窗口聚合由于只输出一次，因此可以用追加流
+        //todo 说明： 一个窗口只能输出一次，没有修改数据一说  因此可以用追加流
         DataStream<Row> tuple = tableEnv.toAppendStream(res, Row.class);
 
         tuple.print();

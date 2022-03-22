@@ -1,7 +1,7 @@
 package No03_transform;
 
 import Bean.SensorReading;
-import org.apache.flink.api.common.functions.FilterFunction;
+import No03_transform.myFunction.MyMapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;

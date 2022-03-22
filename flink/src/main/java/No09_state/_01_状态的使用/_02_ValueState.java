@@ -1,5 +1,6 @@
 package No09_state._01_状态的使用;
 
+
 import Bean.SensorReading;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;

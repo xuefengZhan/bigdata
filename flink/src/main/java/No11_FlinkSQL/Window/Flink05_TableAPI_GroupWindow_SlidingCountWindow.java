@@ -39,6 +39,7 @@ public class Flink05_TableAPI_GroupWindow_SlidingCountWindow {
                 $("pt").proctime());
 
         //滚动计数窗口 over.every.on.as   计数窗口也要时间
+        // 第一个窗口集满5个才打印，后面每2个打印一次  和API方式不同，API是两个一打
         Table res = table.window(Slide.over(rowInterval(5L)).every(rowInterval(2L)).on($("pt")).as("cw"))
                 .groupBy($("id"), $("cw"))
                 .select($("id"), $("id").count());
