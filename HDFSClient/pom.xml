@@ -27,12 +27,7 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>2.12.0</version>
         </dependency>
-        <!--配置客户端，意思是当前项目为Client -->
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>3.1.3</version>
-        </dependency>
+
     </dependencies>
 
 
