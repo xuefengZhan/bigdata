@@ -116,7 +116,7 @@ public class dwd01_BaseLogApp {
                 }
         );
 
-        //todo 7.shuchu
+        //todo 7.输出
 
         DataStream<String> startDS = pageDS.getSideOutput(startOutputTag);
         DataStream<String> displayDS = pageDS.getSideOutput(displayOutputTag);

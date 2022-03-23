@@ -13,13 +13,12 @@ import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.connectors.kafka.KafkaDeserializationSchema;
 import org.apache.flink.streaming.connectors.kafka.KafkaSerializationSchema;
 import org.apache.flink.util.OutputTag;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 import javax.annotation.Nullable;
-import java.nio.charset.StandardCharsets;
+
 
 public class dwd02_BaseDBApp {
     public static void main(String[] args) throws Exception {
@@ -53,9 +52,12 @@ public class dwd02_BaseDBApp {
         //todo 4.使用flinkCDC消费配置表 并处理成广播流
         String topicPro = "properties";
         String groupIDPro = "peizhi";
+        // step1  创建了流
         DataStreamSource<String> ProDS = env.addSource(KafkaUtil.getKafkaConsumer(topicPro, groupIDPro));
+        // step2  创建MapStateDescriptor  key为 广播流和主流join的字段
         MapStateDescriptor<String, TableProcess> brocastMap = new MapStateDescriptor<>("map-state", String.class,
                 TableProcess.class);
+        // step3  将流广播出去
         BroadcastStream<String> broadcastStream = ProDS.broadcast(brocastMap);
 
         //todo 5.连接主流和广播流
