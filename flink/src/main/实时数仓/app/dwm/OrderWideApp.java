@@ -23,9 +23,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
+/**
+ *  订单宽表
+ */
 public class OrderWideApp {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         //todo 1.获取环境
@@ -82,6 +85,8 @@ public class OrderWideApp {
                                 return orderDetail.getCreate_ts();
                             }
                         }));
+
+
         //todo 3.两个事实表双流join
         SingleOutputStreamOperator<OrderWide> orderWideDS = orderInfoDS.keyBy(OrderInfo::getId)
                 .intervalJoin(orderDetailDS.keyBy(OrderDetail::getOrder_id))
@@ -110,11 +115,9 @@ public class OrderWideApp {
             return orderWide;
         });
 
-
-
-
-
-        SingleOutputStreamOperator<OrderWide> orderWideSingleOutputStreamOperator = AsyncDataStream.unorderedWait(orderWideDS,
+        // todo 4.2 异步IO方式
+        //关联省份
+        SingleOutputStreamOperator<OrderWide> orderWideWithProvinceDS = AsyncDataStream.unorderedWait(orderWideDS,
                 new DimAsyncFunction<OrderWide>("DIM_USER_INFO") {
                     @Override
                     public String getKey(OrderWide input) {
@@ -123,17 +126,28 @@ public class OrderWideApp {
 
                     @Override
                     public void join(OrderWide orderWide, JSONObject jsonObject) throws ParseException {
+                        orderWide.setProvince_name(jsonObject.getString("name"));
+                        orderWide.setProvince_area_code(jsonObject.getString("area_code"));
+                        orderWide.setProvince_iso_code(jsonObject.getString("ISO_CODE"));
+                        orderWide.setProvince_3166_2_code(jsonObject.getString("ISO_3166_2"));
+                    }
+                },
+                60,
+                TimeUnit.SECONDS);
 
-                        //宽表 需要补充的字段
-                        String gender = jsonObject.getString("GENDER");
-                        String birthday = jsonObject.getString("BIRTHDAY");
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        long currentTs = System.currentTimeMillis();
-                        long ts = sdf.parse(birthday).getTime();
+        SingleOutputStreamOperator<OrderWide> orderWideWithSkuDS = AsyncDataStream.unorderedWait(orderWideWithProvinceDS,
+                new DimAsyncFunction<OrderWide>("DIM_SKU_INFO") {
+                    @Override
+                    public String getKey(OrderWide input) {
+                        return input.getUser_id().toString();
+                    }
 
-                        long age = (currentTs - ts) / (1000 * 60 *60 *24 * 365L);
-                        orderWide.setUser_age((int) age);
-                        orderWide.setUser_gender(gender);
+                    @Override
+                    public void join(OrderWide orderWide, JSONObject jsonObject) throws ParseException {
+                        orderWide.setSku_name(jsonObject.getString("sku_name"));
+                        orderWide.setCategory3_id(jsonObject.getLong("CATEGORY3_ID"));
+                        orderWide.setSpu_id(jsonObject.getLong("SPU_ID"));
+                        orderWide.setTm_id(jsonObject.getLong("TM_ID"));
                     }
                 },
                 60,
@@ -141,7 +155,10 @@ public class OrderWideApp {
 
 
         //todo 5.将数据写到kafka
+        orderWideWithSkuDS.map(JSONObject::toJSONString)
+                .addSink(KafkaUtil.getKafkaProducer(orderWideSinkTopic));
 
         //todo 6.执行任务
+        env.execute();
     }
 }

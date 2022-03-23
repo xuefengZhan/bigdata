@@ -41,7 +41,6 @@ public class _09_SlideWindowTopN_乱序数据02 {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
-
         //DataStreamSource<String> source = env.readTextFile("D:\\IdeaProjects\\bigdata\\flink\\src\\main\\resources\\Data\\apache.log");
 
         DataStreamSource<String> source = env.socketTextStream("hadoop102", 9999);
@@ -169,7 +168,7 @@ public class _09_SlideWindowTopN_乱序数据02 {
 
         //key = url
         MapState<String,UrlWindowCnt> map;
-        private int size;
+        private final int size;
 
 
         public MyKeyFun(int size) {
