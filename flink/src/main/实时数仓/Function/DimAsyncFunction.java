@@ -5,6 +5,7 @@ import Util.DimUtil;
 import Util.ThreadPoolUtil;
 import com.alibaba.fastjson.JSONObject;
 import common.GmallConfig;
+import lombok.SneakyThrows;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.async.ResultFuture;
 import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
@@ -42,6 +43,7 @@ public abstract  class DimAsyncFunction<T> extends RichAsyncFunction<T,T> implem
     public void asyncInvoke(T input, ResultFuture<T> resultFuture) throws Exception {
         //利用线程池提交一个任务
         threadPoolExecutor.submit(new Runnable() {
+            @SneakyThrows
             @Override
             public void run() {
                 //查询维度信息  表名 + id查

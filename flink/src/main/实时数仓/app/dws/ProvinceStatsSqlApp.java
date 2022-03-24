@@ -77,8 +77,8 @@ public class ProvinceStatsSqlApp {
 
 
         //TODO 5.写入到lickHouse
-        provinceStatsDataStream.addSink(ClickHouseUtil.
-                <ProvinceStats>getJdbcSink("insert into  province_stats_2021  values(?,?,?,?,?,?,?,?,?,?)"));
+//        provinceStatsDataStream.addSink(ClickHouseUtil.
+//                <ProvinceStats>getJdbcSink("insert into  province_stats_2021  values(?,?,?,?,?,?,?,?,?,?)"));
 
 
     }
