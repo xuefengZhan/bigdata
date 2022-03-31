@@ -94,7 +94,7 @@ public class _13_支付到账_keyBy后connect {
 
     }
 
-    private static class OrderReceiptKeyProFunc extends KeyedCoProcessFunction<String,OrderEvent,TxEvent,Tuple2<OrderEvent,TxEvent>>{
+    public static class OrderReceiptKeyProFunc extends KeyedCoProcessFunction<String,OrderEvent,TxEvent,Tuple2<OrderEvent,TxEvent>>{
         ValueState<OrderEvent> orderValue;
         ValueState<TxEvent> TxValue;
 

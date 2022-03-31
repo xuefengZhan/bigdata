@@ -23,6 +23,7 @@ public class DimUtil {
 //
 //        return jsonObjects.get(0);
 
+
         //todo 方案2 旁路缓存优化
         //\查询redis 命中直接返回，没命中 查询Hbase 将结果放进缓存
         //Jedis jedis = RedisUtil.getJedis();

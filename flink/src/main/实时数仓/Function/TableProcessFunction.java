@@ -23,8 +23,8 @@ import java.util.List;
 public class TableProcessFunction extends BroadcastProcessFunction<JSONObject,String,JSONObject> {
 
     private Connection connection;
-    private OutputTag<JSONObject> HbaseOutputTag;
-    private MapStateDescriptor<String, TableProcess> mapStateDescriptor;
+    private final OutputTag<JSONObject> HbaseOutputTag;
+    private final MapStateDescriptor<String, TableProcess> mapStateDescriptor;
     private PreparedStatement preparedStatement;
 
     public TableProcessFunction(OutputTag<JSONObject> hbaseOutputTag, MapStateDescriptor<String, TableProcess> mapStateDescriptor) {
@@ -81,7 +81,6 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject,St
                     tableProcess.getSinkColumns(),
                     tableProcess.getSinkPk(),
                     tableProcess.getSinkExtend());
-
         }
 
         //3.广播

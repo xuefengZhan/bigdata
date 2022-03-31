@@ -34,4 +34,13 @@ public class JoinBean {
     public void setTs(Long ts) {
         this.ts = ts;
     }
+
+    @Override
+    public String toString() {
+        return "JoinBean{" +
+                "name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", ts=" + ts +
+                '}';
+    }
 }
